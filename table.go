@@ -18,7 +18,7 @@ func (t *Table) AddRow(row ...string) {
 func (t *Table) Print() error {
 	f := t.formatString()
 
-	t.Context.Writef(fmt.Sprintf("<header>%s</header>\n", f), interfaceSlice(t.Columns)...)
+	t.Context.Writef(fmt.Sprintf("<h1>%s</h1>\n", f), interfaceSlice(t.Columns)...)
 
 	for _, r := range t.Rows {
 		t.Context.Writef(fmt.Sprintf("<value>%s</value>\n", f), interfaceSlice(r)...)

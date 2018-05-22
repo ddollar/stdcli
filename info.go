@@ -29,7 +29,7 @@ func (i *Info) Print() error {
 }
 
 func (i *Info) formatString() string {
-	return fmt.Sprintf("<header>%%-%ds</header>  <value>%%-%ds</value>\n", i.headerWidth(), i.valueWidth())
+	return fmt.Sprintf("<h1>%%-%ds</h1>  <value>%%-%ds</value>\n", i.headerWidth(), i.valueWidth())
 }
 
 func (i *Info) headerWidth() int {

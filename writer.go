@@ -28,7 +28,9 @@ func init() {
 		Tags: map[string]Renderer{
 			"error":  renderError,
 			"header": RenderColors(242),
-			"info":   RenderColors(246),
+			"h1":     RenderColors(241),
+			"h2":     RenderColors(244),
+			"info":   RenderColors(247),
 			"ok":     RenderColors(46),
 			"start":  RenderColors(247),
 			"u":      RenderUnderline(),

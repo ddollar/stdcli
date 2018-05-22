@@ -30,14 +30,16 @@ func helpGlobal(e *Engine) {
 	}
 
 	for _, cmd := range cs {
-		e.Writer.Writef(fmt.Sprintf(fmt.Sprintf("<info>%%-%ds</info>  <value>%%s</value>\n", l), cmd.FullCommand(), cmd.Description))
+		e.Writer.Writef(fmt.Sprintf(fmt.Sprintf("<h1>%%-%ds</h1>  <value>%%s</value>\n", l), cmd.FullCommand(), cmd.Description))
 	}
 }
 
 func helpCommand(e *Engine, cmd *Command) {
-	e.Writer.Writef("<info>%s</info>  <value>%s</value>\n\n", cmd.FullCommand(), cmd.Description)
+	e.Writer.Writef("<h1>%s</h1>\n\n", cmd.FullCommand())
 
-	e.Writer.Writef("<header>options</header>\n")
+	e.Writer.Writef("<h2>description</h2>\n  <value>%s</value>\n\n", cmd.Description)
+
+	e.Writer.Writef("<h2>options</h2>\n")
 
 	ll := 0
 	ls := 0
@@ -56,7 +58,7 @@ func helpCommand(e *Engine, cmd *Command) {
 	}
 
 	for _, f := range cmd.Flags {
-		// e.Writer.Writef(fmt.Sprintf(fmt.Sprintf("  %%-%ds  %%-%ds   <header>%%s</header>\n", ll, ls), f.UsageLong(), f.UsageShort(), f.Description))
+		// e.Writer.Writef(fmt.Sprintf(fmt.Sprintf("  %%-%ds  %%-%ds   <header>%%s</h1>\n", ll, ls), f.UsageLong(), f.UsageShort(), f.Description))
 		e.Writer.Writef(fmt.Sprintf(fmt.Sprintf("  %%-%ds  %%-%ds\n", ll, ls), f.UsageLong(), f.UsageShort()))
 	}
 }
