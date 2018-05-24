@@ -19,6 +19,7 @@ func (e *Engine) Command(command, description string, fn HandlerFunc, opts Comma
 		Description: description,
 		Handler:     fn,
 		Flags:       opts.Flags,
+		Usage:       opts.Usage,
 		Validate:    opts.Validate,
 		engine:      e,
 	})

@@ -14,6 +14,7 @@ type Command struct {
 	Description string
 	Flags       []Flag
 	Handler     HandlerFunc
+	Usage       string
 	Validate    Validator
 
 	engine *Engine
@@ -21,6 +22,7 @@ type Command struct {
 
 type CommandOptions struct {
 	Flags    []Flag
+	Usage    string
 	Validate Validator
 }
 

@@ -21,21 +21,51 @@ func (c *Context) Arg(i int) string {
 	return ""
 }
 
-func (c *Context) String(name string) string {
+func (c *Context) Flag(name string) *Flag {
 	for _, f := range c.Flags {
-		if f.Name == name && f.Kind == reflect.String {
-			switch t := f.Value.(type) {
-			case nil:
-				v, _ := f.Default.(string)
-				return v
-			case string:
-				return t
-			default:
-				return ""
-			}
+		if f.Name == name {
+			return f
 		}
 	}
+	return nil
+}
 
+func (c *Context) Bool(name string) bool {
+	if f := c.Flag(name); f != nil && f.Kind == reflect.Bool {
+		switch t := f.Value.(type) {
+		case nil:
+			v, _ := f.Default.(bool)
+			return v
+		case bool:
+			return t
+		}
+	}
+	return false
+}
+
+func (c *Context) Int(name string) int {
+	if f := c.Flag(name); f != nil && f.Kind == reflect.Int {
+		switch t := f.Value.(type) {
+		case nil:
+			v, _ := f.Default.(int)
+			return v
+		case int:
+			return t
+		}
+	}
+	return 0
+}
+
+func (c *Context) String(name string) string {
+	if f := c.Flag(name); f != nil && f.Kind == reflect.String {
+		switch t := f.Value.(type) {
+		case nil:
+			v, _ := f.Default.(string)
+			return v
+		case string:
+			return t
+		}
+	}
 	return ""
 }
 
@@ -60,8 +90,9 @@ func (c *Context) Startf(format string, args ...interface{}) {
 	c.Writer().Writef(fmt.Sprintf("%s... ", format), args...)
 }
 
-func (c *Context) Writef(format string, args ...interface{}) {
-	c.Writer().Writef(format, args...)
+func (c *Context) Writef(format string, args ...interface{}) error {
+	_, err := c.Writer().Writef(format, args...)
+	return err
 }
 
 func (c *Context) Options(opts interface{}) error {
@@ -74,10 +105,17 @@ func (c *Context) Options(opts interface{}) error {
 
 		if n := f.Tag.Get("flag"); n != "" {
 			switch f.Type.Elem().Kind() {
+			case reflect.Bool:
+				b := c.Bool(strings.Split(n, ",")[0])
+				u.Set(reflect.ValueOf(&b))
+			case reflect.Int:
+				i := c.Int(strings.Split(n, ",")[0])
+				u.Set(reflect.ValueOf(&i))
 			case reflect.String:
 				s := c.String(strings.Split(n, ",")[0])
 				u.Set(reflect.ValueOf(&s))
 			default:
+				fmt.Printf("f.Type = %+v\n", f.Type)
 				return fmt.Errorf("unknown flag type: %s", f.Type.Elem().Kind())
 			}
 		}

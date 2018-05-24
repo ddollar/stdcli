@@ -3,6 +3,7 @@ package stdcli
 import (
 	"fmt"
 	"reflect"
+	"strconv"
 	"strings"
 )
 
@@ -21,6 +22,15 @@ type Flag struct {
 
 func (f *Flag) Set(v string) error {
 	switch f.Kind {
+	case reflect.Bool:
+		f.Value = (v == "true")
+	case reflect.Int:
+		fmt.Printf("v = %+v\n", v)
+		i, err := strconv.Atoi(v)
+		if err != nil {
+			return err
+		}
+		f.Value = i
 	case reflect.String:
 		f.Value = v
 	default:
@@ -36,6 +46,10 @@ func (f *Flag) String() string {
 
 func (f *Flag) Type() string {
 	switch f.Kind {
+	case reflect.Bool:
+		return "bool"
+	case reflect.Int:
+		return "int"
 	case reflect.String:
 		return "string"
 	default:
@@ -45,9 +59,12 @@ func (f *Flag) Type() string {
 
 func (f *Flag) Usage(v string) string {
 	switch f.Kind {
-	case reflect.String:
+	case reflect.Bool:
+		return v
+	case reflect.Int, reflect.String:
 		return fmt.Sprintf("%s <u><info>%s</info></u>", v, f.Name)
 	default:
+		fmt.Printf("f = %+v\n", f)
 		panic(fmt.Sprintf("unknown flag type: %s", f.Kind))
 	}
 }

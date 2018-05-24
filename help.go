@@ -19,7 +19,7 @@ func helpGlobal(e *Engine) {
 
 	sort.Slice(cs, func(i, j int) bool { return cs[i].FullCommand() < cs[j].FullCommand() })
 
-	l := 0
+	l := 7
 
 	for _, cmd := range cs {
 		c := cmd.FullCommand()
@@ -29,22 +29,32 @@ func helpGlobal(e *Engine) {
 		}
 	}
 
+	// e.Writer.Writef(fmt.Sprintf(fmt.Sprintf("<h2>%%-%ds</h2>  <h2>%%s</h2>\n", l), "COMMAND", "DESCRIPTION"))
+
 	for _, cmd := range cs {
 		e.Writer.Writef(fmt.Sprintf(fmt.Sprintf("<h1>%%-%ds</h1>  <value>%%s</value>\n", l), cmd.FullCommand(), cmd.Description))
 	}
 }
 
 func helpCommand(e *Engine, cmd *Command) {
-	e.Writer.Writef("<h1>%s</h1>\n\n", cmd.FullCommand())
+	e.Writer.Writef("<h2>USAGE</h2>\n  <value>%s</value> <info>%s</info>\n\n", cmd.FullCommand(), cmd.Usage)
 
-	e.Writer.Writef("<h2>description</h2>\n  <value>%s</value>\n\n", cmd.Description)
+	e.Writer.Writef("<h2>DESCRIPTION</h2>\n  <value>%s</value>\n\n", cmd.Description)
 
-	e.Writer.Writef("<h2>options</h2>\n")
+	e.Writer.Writef("<h2>OPTIONS</h2>\n")
 
 	ll := 0
 	ls := 0
 
+	fs := []Flag{}
+
 	for _, f := range cmd.Flags {
+		fs = append(fs, f)
+	}
+
+	sort.Slice(fs, func(i, j int) bool { return fs[i].Name < fs[j].Name })
+
+	for _, f := range fs {
 		l := f.UsageLong()
 		s := f.UsageShort()
 
@@ -57,7 +67,7 @@ func helpCommand(e *Engine, cmd *Command) {
 		}
 	}
 
-	for _, f := range cmd.Flags {
+	for _, f := range fs {
 		// e.Writer.Writef(fmt.Sprintf(fmt.Sprintf("  %%-%ds  %%-%ds   <header>%%s</h1>\n", ll, ls), f.UsageLong(), f.UsageShort(), f.Description))
 		e.Writer.Writef(fmt.Sprintf(fmt.Sprintf("  %%-%ds  %%-%ds\n", ll, ls), f.UsageLong(), f.UsageShort()))
 	}
