@@ -106,16 +106,24 @@ func (c *Context) Options(opts interface{}) error {
 		if n := f.Tag.Get("flag"); n != "" {
 			switch f.Type.Elem().Kind() {
 			case reflect.Bool:
-				b := c.Bool(strings.Split(n, ",")[0])
-				u.Set(reflect.ValueOf(&b))
+				var x bool
+				y := c.Bool(strings.Split(n, ",")[0])
+				if x != y {
+					u.Set(reflect.ValueOf(&y))
+				}
 			case reflect.Int:
-				i := c.Int(strings.Split(n, ",")[0])
-				u.Set(reflect.ValueOf(&i))
+				var x int
+				y := c.Int(strings.Split(n, ",")[0])
+				if x != y {
+					u.Set(reflect.ValueOf(&y))
+				}
 			case reflect.String:
-				s := c.String(strings.Split(n, ",")[0])
-				u.Set(reflect.ValueOf(&s))
+				var x string
+				y := c.String(strings.Split(n, ",")[0])
+				if x != y {
+					u.Set(reflect.ValueOf(&y))
+				}
 			default:
-				fmt.Printf("f.Type = %+v\n", f.Type)
 				return fmt.Errorf("unknown flag type: %s", f.Type.Elem().Kind())
 			}
 		}
