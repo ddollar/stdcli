@@ -85,9 +85,20 @@ func (c *Context) Writer() *Writer {
 	return c.engine.Writer
 }
 
-func (c *Context) OK() error {
-	c.Writer().Writef("<ok>OK</ok>\n")
+func (c *Context) OK(id ...string) error {
+	c.Writer().Writef("<ok>OK</ok>")
+
+	if len(id) > 0 {
+		c.Writer().Writef(", <id>%s</id>", strings.Join(id, " "))
+	}
+
+	c.Writer().Writef("\n")
+
 	return nil
+}
+
+func (c *Context) OKf(format string, args ...interface{}) {
+	c.Writer().Writef("<ok>OK</ok>, <id>%s</id>\n", fmt.Sprintf(format, args...))
 }
 
 func (c *Context) Startf(format string, args ...interface{}) {
