@@ -97,10 +97,6 @@ func (c *Context) OK(id ...string) error {
 	return nil
 }
 
-func (c *Context) OKf(format string, args ...interface{}) {
-	c.Writer().Writef("<ok>OK</ok>, <id>%s</id>\n", fmt.Sprintf(format, args...))
-}
-
 func (c *Context) Startf(format string, args ...interface{}) {
 	c.Writer().Writef(fmt.Sprintf("%s... ", format), args...)
 }
