@@ -21,7 +21,7 @@ func (t *Table) Print() error {
 	t.Context.Writef(fmt.Sprintf("<h1>%s</h1>\n", f), interfaceSlice(t.Columns)...)
 
 	for _, r := range t.Rows {
-		t.Context.Writef(fmt.Sprintf("<value>%s</value>\n", f), interfaceSlice(r)...)
+		t.Context.Writef(fmt.Sprintf(fmt.Sprintf("<value>%s</value>\n", f), interfaceSlice(r)...))
 	}
 
 	return nil
@@ -43,11 +43,13 @@ func (t *Table) widths() []int {
 	w := make([]int, len(t.Columns))
 
 	for i, c := range t.Columns {
-		w[i] = len(c)
+		w[i] = len(stripTag(c))
 
 		for _, r := range t.Rows {
-			if len(r) > i && len(r[i]) > w[i] {
-				w[i] = len(r[i])
+			if len(r) > i {
+				if lri := len(stripTag(r[i])); lri > w[i] {
+					w[i] = lri
+				}
 			}
 		}
 	}

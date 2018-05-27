@@ -118,7 +118,7 @@ func stripTag(s string) string {
 	match := tagStripper.FindStringSubmatch(s)
 
 	if len(match) != 2 {
-		panic(fmt.Sprintf("could not strip tags: %s", s))
+		return s
 	}
 
 	return match[1]
