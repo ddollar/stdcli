@@ -77,6 +77,10 @@ func (c *Context) Table(columns ...string) *Table {
 	return &Table{Columns: columns, Context: c}
 }
 
+func (c *Context) Write(data []byte) (int, error) {
+	return c.Writer().Write(data)
+}
+
 func (c *Context) Writer() *Writer {
 	return c.engine.Writer
 }
