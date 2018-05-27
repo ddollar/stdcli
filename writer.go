@@ -30,7 +30,7 @@ func init() {
 			"header": RenderColors(242),
 			"h1":     RenderColors(244),
 			"h2":     RenderColors(241),
-			"id":     RenderColors(24),
+			"id":     RenderColors(247),
 			"info":   RenderColors(247),
 			"ok":     RenderColors(46),
 			"start":  RenderColors(247),
