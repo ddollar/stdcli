@@ -17,18 +17,32 @@ func Args(num int) Validator {
 
 func ArgsBetween(min, max int) Validator {
 	return func(c *Context) error {
-		if len(c.Args) < min {
-			return fmt.Errorf("at least %d %s required", min, plural("arg", min))
+		if err := ArgsMin(min)(c); err != nil {
+			return err
 		}
-		if len(c.Args) > max {
-			return fmt.Errorf("no more than %d %s expected", max, plural("arg", max))
+		if err := ArgsMax(max)(c); err != nil {
+			return err
 		}
 		return nil
 	}
 }
 
-func ArgsMax(num int) Validator {
-	return ArgsBetween(0, num)
+func ArgsMin(min int) Validator {
+	return func(c *Context) error {
+		if len(c.Args) < min {
+			return fmt.Errorf("at least %d %s required", min, plural("arg", min))
+		}
+		return nil
+	}
+}
+
+func ArgsMax(max int) Validator {
+	return func(c *Context) error {
+		if len(c.Args) > max {
+			return fmt.Errorf("no more than %d %s expected", max, plural("arg", max))
+		}
+		return nil
+	}
 }
 
 func plural(noun string, num int) string {
