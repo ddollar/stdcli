@@ -16,9 +16,23 @@ type Flag struct {
 	Value       interface{}
 }
 
-// func StringFlag(name, short, description string, def interface{}) Flag {
-//   return Flag{Name: name, Short: short, Description: description, Default: def, Kind: "string"}
-// }
+func BoolFlag(name, short, description string) Flag {
+	return Flag{
+		Description: description,
+		Kind:        reflect.Bool,
+		Name:        name,
+		Short:       short,
+	}
+}
+
+func StringFlag(name, short, description string) Flag {
+	return Flag{
+		Description: description,
+		Kind:        reflect.String,
+		Name:        name,
+		Short:       short,
+	}
+}
 
 func (f *Flag) Set(v string) error {
 	switch f.Kind {
@@ -106,13 +120,4 @@ func OptionFlags(opts interface{}) []Flag {
 	}
 
 	return flags
-}
-
-func StringFlag(name, short, description string) Flag {
-	return Flag{
-		Description: description,
-		Kind:        reflect.String,
-		Name:        name,
-		Short:       short,
-	}
 }
