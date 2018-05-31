@@ -27,6 +27,24 @@ func BoolFlag(name, short, description string) Flag {
 	}
 }
 
+func DurationFlag(name, short, description string) Flag {
+	return Flag{
+		Description: description,
+		Name:        name,
+		Short:       short,
+		kind:        "duration",
+	}
+}
+
+func IntFlag(name, short, description string) Flag {
+	return Flag{
+		Description: description,
+		Name:        name,
+		Short:       short,
+		kind:        "int",
+	}
+}
+
 func StringFlag(name, short, description string) Flag {
 	return Flag{
 		Description: description,
