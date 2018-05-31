@@ -76,7 +76,7 @@ func (c *Context) Info() *Info {
 	return &Info{Context: c}
 }
 
-func (c *Context) ModeRaw() error {
+func (c *Context) TerminalRaw() error {
 	state, err := terminal.MakeRaw(int(c.Reader().Fd()))
 	if err != nil {
 		return err
@@ -87,12 +87,16 @@ func (c *Context) ModeRaw() error {
 	return nil
 }
 
-func (c *Context) ModeRestore() error {
+func (c *Context) TerminalRestore() error {
 	if c.state == nil {
 		return nil
 	}
 
 	return terminal.Restore(int(c.Reader().Fd()), c.state)
+}
+
+func (c *Context) TerminalSize() (int, int, error) {
+	return terminal.GetSize(int(c.Reader().Fd()))
 }
 
 func (c *Context) Reader() *Reader {
