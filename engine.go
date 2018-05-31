@@ -51,6 +51,8 @@ func (e *Engine) Execute(args []string) int {
 	switch t := err.(type) {
 	case nil:
 		return 0
+	case ExitCoder:
+		return t.Code()
 	default:
 		e.Writer.Errorf("%s", t)
 		return 1
