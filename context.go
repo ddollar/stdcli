@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"reflect"
 	"strings"
+	"time"
 
 	"golang.org/x/crypto/ssh/terminal"
 )
@@ -34,7 +35,7 @@ func (c *Context) Flag(name string) *Flag {
 }
 
 func (c *Context) Bool(name string) bool {
-	if f := c.Flag(name); f != nil && f.Kind == reflect.Bool {
+	if f := c.Flag(name); f != nil && f.Type() == "bool" {
 		switch t := f.Value.(type) {
 		case nil:
 			v, _ := f.Default.(bool)
@@ -47,7 +48,7 @@ func (c *Context) Bool(name string) bool {
 }
 
 func (c *Context) Int(name string) int {
-	if f := c.Flag(name); f != nil && f.Kind == reflect.Int {
+	if f := c.Flag(name); f != nil && f.Type() == "int" {
 		switch t := f.Value.(type) {
 		case nil:
 			v, _ := f.Default.(int)
@@ -60,7 +61,7 @@ func (c *Context) Int(name string) int {
 }
 
 func (c *Context) String(name string) string {
-	if f := c.Flag(name); f != nil && f.Kind == reflect.String {
+	if f := c.Flag(name); f != nil && f.Type() == "string" {
 		switch t := f.Value.(type) {
 		case nil:
 			v, _ := f.Default.(string)
@@ -70,6 +71,13 @@ func (c *Context) String(name string) string {
 		}
 	}
 	return ""
+}
+
+func (c *Context) Value(name string) interface{} {
+	if f := c.Flag(name); f != nil {
+		return f.Value
+	}
+	return nil
 }
 
 func (c *Context) Info() *Info {
@@ -149,24 +157,23 @@ func (c *Context) Options(opts interface{}) error {
 		u := v.Field(i)
 
 		if n := f.Tag.Get("flag"); n != "" {
-			switch f.Type.Elem().Kind() {
-			case reflect.Bool:
-				var x bool
-				y := c.Bool(strings.Split(n, ",")[0])
-				if x != y {
-					u.Set(reflect.ValueOf(&y))
+			name := strings.Split(n, ",")[0]
+			switch typeString(f.Type.Elem()) {
+			case "bool":
+				if x, ok := c.Value(name).(bool); ok {
+					u.Set(reflect.ValueOf(&x))
 				}
-			case reflect.Int:
-				var x int
-				y := c.Int(strings.Split(n, ",")[0])
-				if x != y {
-					u.Set(reflect.ValueOf(&y))
+			case "duration":
+				if x, ok := c.Value(name).(time.Duration); ok {
+					u.Set(reflect.ValueOf(&x))
 				}
-			case reflect.String:
-				var x string
-				y := c.String(strings.Split(n, ",")[0])
-				if x != y {
-					u.Set(reflect.ValueOf(&y))
+			case "int":
+				if x, ok := c.Value(name).(int); ok {
+					u.Set(reflect.ValueOf(&x))
+				}
+			case "string":
+				if x, ok := c.Value(name).(string); ok {
+					u.Set(reflect.ValueOf(&x))
 				}
 			default:
 				return fmt.Errorf("unknown flag type: %s", f.Type.Elem().Kind())

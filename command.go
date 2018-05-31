@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"reflect"
 	"strings"
 
 	"github.com/spf13/pflag"
@@ -39,7 +38,7 @@ func (c *Command) Execute(args []string) error {
 		g := f
 		flags = append(flags, &g)
 		flag := fs.VarPF(&g, f.Name, f.Short, f.Description)
-		if f.Kind == reflect.Bool {
+		if f.Type() == "bool" {
 			flag.NoOptDefVal = "true"
 		}
 	}

@@ -21,7 +21,7 @@ func (t *Table) Print() error {
 	t.Context.Writef(fmt.Sprintf("<h1>%s</h1>\n", f), interfaceSlice(t.Columns)...)
 
 	for _, r := range t.Rows {
-		t.Context.Writef(fmt.Sprintf(fmt.Sprintf("<value>%s</value>\n", f), interfaceSlice(r)...))
+		t.Context.Writef(fmt.Sprintf("<value>%s</value>\n", f), interfaceSlice(r)...)
 	}
 
 	return nil
