@@ -99,6 +99,10 @@ func (c *Context) TerminalSize() (int, int, error) {
 	return terminal.GetSize(int(c.Reader().Fd()))
 }
 
+func (c *Context) Read(data []byte) (int, error) {
+	return c.Reader().Read(data)
+}
+
 func (c *Context) Reader() *Reader {
 	return c.engine.Reader
 }
