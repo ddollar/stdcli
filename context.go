@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"reflect"
 	"strings"
+
+	"golang.org/x/crypto/ssh/terminal"
 )
 
 type Context struct {
@@ -11,6 +13,7 @@ type Context struct {
 	Flags []*Flag
 
 	engine *Engine
+	state  *terminal.State
 }
 
 func (c *Context) Arg(i int) string {
@@ -71,6 +74,29 @@ func (c *Context) String(name string) string {
 
 func (c *Context) Info() *Info {
 	return &Info{Context: c}
+}
+
+func (c *Context) ModeRaw() error {
+	state, err := terminal.MakeRaw(int(c.Reader().Fd()))
+	if err != nil {
+		return err
+	}
+
+	c.state = state
+
+	return nil
+}
+
+func (c *Context) ModeRestore() error {
+	if c.state == nil {
+		return nil
+	}
+
+	return terminal.Restore(int(c.Reader().Fd()), c.state)
+}
+
+func (c *Context) Reader() *Reader {
+	return c.engine.Reader
 }
 
 func (c *Context) Table(columns ...string) *Table {

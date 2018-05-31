@@ -9,6 +9,7 @@ import (
 type Engine struct {
 	Commands []Command
 	Name     string
+	Reader   *Reader
 	Version  string
 	Writer   *Writer
 }

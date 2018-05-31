@@ -3,6 +3,7 @@ package stdcli
 func New(name, version string) *Engine {
 	e := &Engine{
 		Name:    name,
+		Reader:  DefaultReader,
 		Version: version,
 		Writer:  DefaultWriter,
 	}
