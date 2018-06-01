@@ -2,6 +2,7 @@ package stdcli
 
 import (
 	"fmt"
+	"strings"
 )
 
 type Info struct {
@@ -22,7 +23,8 @@ func (i *Info) Print() error {
 	f := i.formatString()
 
 	for _, r := range i.Rows {
-		i.Context.Writef(f, r.Header, r.Value)
+		value := strings.Replace(r.Value, "\n", fmt.Sprintf(fmt.Sprintf("\n%%%ds  ", i.headerWidth()), ""), -1)
+		i.Context.Writef(f, r.Header, value)
 	}
 
 	return nil
