@@ -12,7 +12,7 @@ func interfaceSlice(ss []string) []interface{} {
 	return is
 }
 
-func isTerminal(f *os.File) bool {
+func IsTerminal(f *os.File) bool {
 	stat, err := f.Stat()
 	if err != nil {
 		return false

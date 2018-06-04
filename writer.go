@@ -22,7 +22,7 @@ type Writer struct {
 
 func init() {
 	DefaultWriter = &Writer{
-		Color:  isTerminal(os.Stdout),
+		Color:  IsTerminal(os.Stdout),
 		Stdout: os.Stdout,
 		Stderr: os.Stderr,
 		Tags: map[string]Renderer{
