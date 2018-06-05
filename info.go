@@ -50,8 +50,10 @@ func (i *Info) valueWidth() int {
 	w := 0
 
 	for _, r := range i.Rows {
-		if len(r.Value) > w {
-			w = len(r.Value)
+		for _, v := range strings.Split(r.Value, "\n") {
+			if len(v) > w {
+				w = len(v)
+			}
 		}
 	}
 
