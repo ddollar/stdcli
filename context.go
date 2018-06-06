@@ -115,6 +115,36 @@ func (c *Context) Reader() *Reader {
 	return c.engine.Reader
 }
 
+func (c *Context) SettingRead(name string) (string, error) {
+	file, err := c.engine.settingFile(name)
+	if err != nil {
+		return "", err
+	}
+
+	data, err := ioutil.ReadFile(file)
+	if os.IsNotExist(err) {
+		return "", nil
+	}
+	if err != nil {
+		return "", err
+	}
+
+	return string(data), nil
+}
+
+func (c *Context) SettingWrite(name, value string) error {
+	file, err := c.engine.settingFile(name)
+	if err != nil {
+		return err
+	}
+
+	if err := ioutil.WriteFile(file, []byte(value), 0600); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (c *Context) Table(columns ...string) *Table {
 	return &Table{Columns: columns, Context: c}
 }

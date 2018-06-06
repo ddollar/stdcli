@@ -1,8 +1,11 @@
 package stdcli
 
 import (
+	"fmt"
+	"path/filepath"
 	"strings"
 
+	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/pflag"
 )
 
@@ -60,4 +63,13 @@ func (e *Engine) Execute(args []string) int {
 	}
 
 	return 0
+}
+
+func (e *Engine) settingFile(name string) (string, error) {
+	home, err := homedir.Dir()
+	if err != nil {
+		return "", err
+	}
+
+	return filepath.Join(home, fmt.Sprintf(".%s", e.Name), name), nil
 }
