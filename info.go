@@ -31,7 +31,7 @@ func (i *Info) Print() error {
 }
 
 func (i *Info) formatString() string {
-	return fmt.Sprintf("<h1>%%-%ds</h1>  <value>%%-%ds</value>\n", i.headerWidth(), i.valueWidth())
+	return fmt.Sprintf("<h1>%%-%ds</h1>  <value>%%s</value>\n", i.headerWidth())
 }
 
 func (i *Info) headerWidth() int {
@@ -40,20 +40,6 @@ func (i *Info) headerWidth() int {
 	for _, r := range i.Rows {
 		if len(r.Header) > w {
 			w = len(r.Header)
-		}
-	}
-
-	return w
-}
-
-func (i *Info) valueWidth() int {
-	w := 0
-
-	for _, r := range i.Rows {
-		for _, v := range strings.Split(r.Value, "\n") {
-			if len(v) > w {
-				w = len(v)
-			}
 		}
 	}
 
