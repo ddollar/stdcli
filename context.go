@@ -2,6 +2,8 @@ package stdcli
 
 import (
 	"fmt"
+	"io/ioutil"
+	"os"
 	"reflect"
 	"strings"
 	"time"
@@ -105,6 +107,13 @@ func (c *Context) TerminalRestore() error {
 
 func (c *Context) TerminalSize() (int, int, error) {
 	return terminal.GetSize(int(c.Reader().Fd()))
+}
+
+func (c *Context) Fail(err error) {
+	if err != nil {
+		c.Writer().Error(err)
+		os.Exit(1)
+	}
 }
 
 func (c *Context) Read(data []byte) (int, error) {
