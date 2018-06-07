@@ -30,9 +30,17 @@ func (e *Engine) Command(command, description string, fn HandlerFunc, opts Comma
 }
 
 func (e *Engine) Execute(args []string) int {
+	var version bool
+
 	fs := pflag.NewFlagSet(e.Name, pflag.ContinueOnError)
 	fs.Usage = func() {}
+	fs.BoolVarP(&version, "version", "v", false, "display version")
 	fs.Parse(args)
+
+	if version {
+		fmt.Println(e.Version)
+		return 0
+	}
 
 	var m *Command
 	var cargs []string
