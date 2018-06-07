@@ -86,6 +86,15 @@ func (c *Context) Info() *Info {
 	return &Info{Context: c}
 }
 
+func (c *Context) ReadSecret() (string, error) {
+	data, err := terminal.ReadPassword(int(os.Stdin.Fd()))
+	if err != nil {
+		return "", err
+	}
+
+	return string(data), nil
+}
+
 func (c *Context) TerminalRaw() error {
 	state, err := terminal.MakeRaw(int(c.Reader().Fd()))
 	if err != nil {
