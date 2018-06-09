@@ -147,7 +147,7 @@ func (c *Context) SettingRead(name string) (string, error) {
 		return "", err
 	}
 
-	return string(data), nil
+	return strings.TrimSpace(string(data)), nil
 }
 
 func (c *Context) SettingWrite(name, value string) error {
