@@ -111,7 +111,13 @@ func (c *Context) TerminalRestore() error {
 		return nil
 	}
 
-	return terminal.Restore(int(c.Reader().Fd()), c.state)
+	if err := terminal.Restore(int(c.Reader().Fd()), c.state); err != nil {
+		return err
+	}
+
+	c.Writef("\r")
+
+	return nil
 }
 
 func (c *Context) TerminalSize() (int, int, error) {
