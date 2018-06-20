@@ -17,3 +17,7 @@ func init() {
 func (r *Reader) Fd() uintptr {
 	return r.File.Fd()
 }
+
+func (r *Reader) IsTerminal() bool {
+	return IsTerminal(r.File)
+}

@@ -49,21 +49,17 @@ func (w *Writer) Errorf(format string, args ...interface{}) error {
 	return w.Error(fmt.Errorf(format, args...))
 }
 
+func (w *Writer) IsTerminal() bool {
+	if f, ok := w.Stdout.(*os.File); ok {
+		return IsTerminal(f)
+	}
+
+	return false
+}
+
 func (w *Writer) Sprintf(format string, args ...interface{}) string {
 	return fmt.Sprintf(w.renderTags(format), args...)
 }
-
-// func (w *Writer) Startf(format string, args ...interface{}) (int, error) {
-//   return w.Writef("<start>%s</start><start>...</start> ", w.Sprintf(format, args...))
-// }
-
-// func (w *Writer) Wait(status string) (int, error) {
-//   return w.Writef("<wait>%s</wait>\n", status)
-// }
-
-// func (w *Writer) Warn(status string) (int, error) {
-//   return w.Writef("<warn>%s</warn>\n", status)
-// }
 
 func (w *Writer) Write(data []byte) (int, error) {
 	return w.Stdout.Write(data)
