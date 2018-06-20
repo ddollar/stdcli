@@ -139,6 +139,19 @@ func (c *Context) Reader() *Reader {
 	return c.engine.Reader
 }
 
+func (c *Context) SettingDelete(name string) error {
+	file, err := c.engine.settingFile(name)
+	if err != nil {
+		return err
+	}
+
+	if err := os.Remove(file); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (c *Context) SettingRead(name string) (string, error) {
 	file, err := c.engine.settingFile(name)
 	if err != nil {
