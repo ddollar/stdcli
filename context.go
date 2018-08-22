@@ -122,7 +122,7 @@ func (c *Context) TerminalRestore() error {
 }
 
 func (c *Context) TerminalSize() (int, int, error) {
-	return terminal.GetSize(int(c.Reader().Fd()))
+	return terminal.GetSize(int(os.Stdout.Fd()))
 }
 
 func (c *Context) Fail(err error) {
