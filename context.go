@@ -96,23 +96,17 @@ func (c *Context) ReadSecret() (string, error) {
 }
 
 func (c *Context) TerminalRaw() func() {
-	restores := map[int]*terminal.State{}
+	var state *terminal.State
 
-	// if s, err := terminal.MakeRaw(int(c.Reader().Fd())); err == nil {
-	//   restores[int(c.Reader().Fd())] = s
-	// }
-
-	if f, ok := c.Writer().Stdout.(*os.File); ok {
-		if s, err := terminal.MakeRaw(int(f.Fd())); err == nil {
-			restores[int(f.Fd())] = s
-		}
+	if s, err := terminal.MakeRaw(int(c.Reader().Fd())); err == nil {
+		state = s
 	}
 
 	return func() {
-		for fd, state := range restores {
-			terminal.Restore(fd, state)
+		if state != nil {
+			terminal.Restore(int(c.Reader().Fd()), state)
+			c.Writef("\r")
 		}
-		c.Writef("\r")
 	}
 }
 
