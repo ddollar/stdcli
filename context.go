@@ -19,6 +19,10 @@ type Context struct {
 	engine *Engine
 }
 
+func (c *Context) Version() string {
+	return c.engine.Version
+}
+
 func (c *Context) Arg(i int) string {
 	if i < len(c.Args) {
 		return c.Args[i]
