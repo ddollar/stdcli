@@ -19,6 +19,14 @@ type Context struct {
 	engine *Engine
 }
 
+func (c *Context) Run(cmd string, args ...string) ([]byte, error) {
+	if c.engine.Executor == nil {
+		return nil, fmt.Errorf("no executor")
+	}
+
+	return c.engine.Executor.Run(cmd, args...)
+}
+
 func (c *Context) Version() string {
 	return c.engine.Version
 }
