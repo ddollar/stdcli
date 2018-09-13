@@ -161,8 +161,16 @@ func (c *Context) SettingRead(name string) (string, error) {
 	return c.engine.SettingRead(name)
 }
 
+func (c *Context) SettingReadKey(name, key string) (string, error) {
+	return c.engine.SettingReadKey(name, key)
+}
+
 func (c *Context) SettingWrite(name, value string) error {
 	return c.engine.SettingWrite(name, value)
+}
+
+func (c *Context) SettingWriteKey(name, key, value string) error {
+	return c.engine.SettingWriteKey(name, key, value)
 }
 
 func (c *Context) Table(columns ...string) *Table {
