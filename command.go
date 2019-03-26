@@ -31,12 +31,12 @@ type CommandOptions struct {
 
 type HandlerFunc func(*Context) error
 
-func (c *Command) Execute(args []string) error {
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
+// func (c *Command) Execute(args []string) error {
+//   ctx, cancel := context.WithCancel(context.Background())
+//   defer cancel()
 
-	return c.ExecuteContext(ctx, args)
-}
+//   return c.ExecuteContext(ctx, args)
+// }
 
 func (c *Command) ExecuteContext(ctx context.Context, args []string) error {
 	fs := pflag.NewFlagSet("", pflag.ContinueOnError)
