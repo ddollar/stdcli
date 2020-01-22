@@ -49,10 +49,6 @@ func (e *Engine) SettingDirectory(name string) (string, error) {
 		return "", err
 	}
 
-	if err := os.MkdirAll(dir, 0700); err != nil {
-		return "", err
-	}
-
 	return dir, nil
 }
 
