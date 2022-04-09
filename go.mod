@@ -1,4 +1,4 @@
-module github.com/convox/stdcli
+module github.com/ddollar/stdcli
 
 go 1.13
 
