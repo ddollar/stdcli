@@ -205,7 +205,7 @@ func (c *Context) OK(id ...string) error {
 }
 
 func (c *Context) Startf(format string, args ...interface{}) {
-	c.Writer().Writef(fmt.Sprintf("%s... ", format), args...)
+	c.Writer().Writef(fmt.Sprintf("%s: ", format), args...)
 }
 
 func (c *Context) Writef(format string, args ...interface{}) error {
