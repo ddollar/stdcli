@@ -19,6 +19,7 @@ type Context interface {
 	Execute(cmd string, args ...string) ([]byte, error)
 	Flags() Flags
 	InfoWriter() InfoWriter
+	IsTerminal() bool
 	ReadSecret() (string, error)
 	Run(cmd string, args ...string) error
 	Terminal(cmd string, args ...string) error
@@ -71,6 +72,10 @@ func (c *defaultContext) Flags() Flags {
 
 func (c *defaultContext) InfoWriter() InfoWriter {
 	return &infoWriter{ctx: c}
+}
+
+func (c *defaultContext) IsTerminal() bool {
+	return c.engine.Reader.IsTerminal()
 }
 
 func (c *defaultContext) Read(data []byte) (int, error) {
