@@ -20,7 +20,7 @@ type Flag struct {
 	kind string
 }
 
-type Flags []Flag
+type Flags []*Flag
 
 func BoolFlag(name, short, description string) Flag {
 	return Flag{
@@ -166,13 +166,13 @@ func (fs Flags) Value(name string) any {
 	return nil
 }
 
-func (fs Flags) find(name, kind string) (Flag, bool) {
+func (fs Flags) find(name, kind string) (*Flag, bool) {
 	for _, f := range fs {
 		if f.Name == name && f.Type() == kind {
 			return f, true
 		}
 	}
-	return Flag{}, false
+	return nil, false
 }
 
 func OptionFlags(opts any) []Flag {
