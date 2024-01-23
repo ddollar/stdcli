@@ -93,3 +93,27 @@ func (c *Command) Match(args []string) ([]string, bool) {
 
 	return args[len(c.Command):], true
 }
+
+type CommandDefinition struct {
+	Command     string
+	Description string
+	Handler     HandlerFunc
+	Options     CommandOptions
+}
+
+type CommandDefinitions []CommandDefinition
+
+func (cs CommandDefinitions) Apply(e *Engine) {
+	for _, c := range cs {
+		e.Command(c.Command, c.Description, c.Handler, c.Options)
+	}
+}
+
+func (cs *CommandDefinitions) Register(command, description string, fn HandlerFunc, opts CommandOptions) {
+	*cs = append(*cs, CommandDefinition{
+		Command:     command,
+		Description: description,
+		Handler:     fn,
+		Options:     opts,
+	})
+}
