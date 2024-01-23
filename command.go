@@ -2,11 +2,11 @@ package stdcli
 
 import (
 	"context"
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
 
+	"github.com/pkg/errors"
 	"github.com/spf13/pflag"
 )
 
@@ -29,25 +29,17 @@ type CommandOptions struct {
 	Validate  Validator
 }
 
-type HandlerFunc func(*Context) error
-
-// func (c *Command) Execute(args []string) error {
-//   ctx, cancel := context.WithCancel(context.Background())
-//   defer cancel()
-
-//   return c.ExecuteContext(ctx, args)
-// }
+type HandlerFunc func(Context) error
 
 func (c *Command) ExecuteContext(ctx context.Context, args []string) error {
 	fs := pflag.NewFlagSet("", pflag.ContinueOnError)
 	fs.Usage = func() { helpCommand(c.engine, c) }
 
-	flags := []*Flag{}
+	flags := []Flag{}
 
 	for _, f := range c.Flags {
-		g := f
-		flags = append(flags, &g)
-		flag := fs.VarPF(&g, f.Name, f.Short, f.Description)
+		flags = append(flags, f)
+		flag := fs.VarPF(&f, f.Name, f.Short, f.Description)
 		if f.Type() == "bool" {
 			flag.NoOptDefVal = "true"
 		}
@@ -56,18 +48,18 @@ func (c *Command) ExecuteContext(ctx context.Context, args []string) error {
 	if err := fs.Parse(args); err != nil {
 		if strings.HasPrefix(err.Error(), "unknown shorthand flag") {
 			parts := strings.Split(err.Error(), " ")
-			return fmt.Errorf("unknown flag: %s", parts[len(parts)-1])
+			return errors.Errorf("unknown flag: %s", parts[len(parts)-1])
 		}
 		if err == pflag.ErrHelp {
 			return nil
 		}
-		return err
+		return errors.WithStack(err)
 	}
 
-	cc := &Context{
+	cc := &defaultContext{
 		Context: ctx,
-		Args:    fs.Args(),
-		Flags:   flags,
+		args:    fs.Args(),
+		flags:   flags,
 		engine:  c.engine,
 	}
 

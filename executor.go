@@ -4,6 +4,8 @@ import (
 	"io"
 	"os"
 	"os/exec"
+
+	"github.com/pkg/errors"
 )
 
 type Executor interface {
@@ -16,7 +18,12 @@ type CmdExecutor struct {
 }
 
 func (e *CmdExecutor) Execute(cmd string, args ...string) ([]byte, error) {
-	return exec.Command(cmd, args...).CombinedOutput()
+	data, err := exec.Command(cmd, args...).CombinedOutput()
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	return data, nil
 }
 
 func (e *CmdExecutor) Run(w io.Writer, cmd string, args ...string) error {
@@ -25,7 +32,11 @@ func (e *CmdExecutor) Run(w io.Writer, cmd string, args ...string) error {
 	c.Stdout = w
 	c.Stderr = w
 
-	return c.Run()
+	if err := c.Run(); err != nil {
+		return errors.WithStack(err)
+	}
+
+	return nil
 }
 
 func (e *CmdExecutor) Terminal(cmd string, args ...string) error {
@@ -35,5 +46,9 @@ func (e *CmdExecutor) Terminal(cmd string, args ...string) error {
 	c.Stdout = os.Stdout
 	c.Stderr = os.Stderr
 
-	return c.Run()
+	if err := c.Run(); err != nil {
+		return errors.WithStack(err)
+	}
+
+	return nil
 }

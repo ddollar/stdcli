@@ -9,11 +9,9 @@ func New(name, version string) *Engine {
 		Writer:   DefaultWriter,
 	}
 
-	e.Command("help", "list commands", Help, CommandOptions{
+	e.Command("help", "list commands", help(e), CommandOptions{
 		Validate: ArgsBetween(0, 1),
 	})
-
-	terminalSetup()
 
 	return e
 }
