@@ -24,7 +24,7 @@ type Context interface {
 	Run(cmd string, args ...string) error
 	Terminal(cmd string, args ...string) error
 	Version() string
-	Writef(format string, args ...any) error
+	Writef(format string, args ...any)
 }
 
 type defaultContext struct {
@@ -128,9 +128,8 @@ func (c *defaultContext) Write(data []byte) (int, error) {
 	return c.engine.Writer.Write(data)
 }
 
-func (c *defaultContext) Writef(format string, args ...any) error {
-	_, err := c.engine.Writer.Write([]byte(fmt.Sprintf(format, args...)))
-	return err
+func (c *defaultContext) Writef(format string, args ...any) {
+	c.engine.Writer.Write([]byte(fmt.Sprintf(format, args...))) //nolint:errcheck
 }
 
 func (c *defaultContext) TableWriter(columns ...string) TableWriter {
