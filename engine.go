@@ -30,10 +30,7 @@ func (e *Engine) Command(command, description string, fn HandlerFunc, opts Comma
 }
 
 func (e *Engine) Execute(args []string) int {
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
-	return e.ExecuteContext(ctx, args)
+	return e.ExecuteContext(context.Background(), args)
 }
 
 func (e *Engine) ExecuteContext(ctx context.Context, args []string) int {

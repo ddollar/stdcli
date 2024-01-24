@@ -1,6 +1,7 @@
 package stdcli
 
 import (
+	"context"
 	"io"
 	"os"
 	"os/exec"
@@ -9,16 +10,15 @@ import (
 )
 
 type Executor interface {
-	Execute(cmd string, args ...string) ([]byte, error)
-	Run(w io.Writer, cmd string, args ...string) error
-	Terminal(cmd string, args ...string) error
+	Execute(ctx context.Context, cmd string, args ...string) ([]byte, error)
+	Run(ctx context.Context, w io.Writer, cmd string, args ...string) error
+	Terminal(ctx context.Context, cmd string, args ...string) error
 }
 
-type CmdExecutor struct {
-}
+type defaultExecutor struct{}
 
-func (e *CmdExecutor) Execute(cmd string, args ...string) ([]byte, error) {
-	data, err := exec.Command(cmd, args...).CombinedOutput()
+func (e *defaultExecutor) Execute(ctx context.Context, cmd string, args ...string) ([]byte, error) {
+	data, err := exec.CommandContext(ctx, cmd, args...).CombinedOutput()
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
@@ -26,8 +26,8 @@ func (e *CmdExecutor) Execute(cmd string, args ...string) ([]byte, error) {
 	return data, nil
 }
 
-func (e *CmdExecutor) Run(w io.Writer, cmd string, args ...string) error {
-	c := exec.Command(cmd, args...)
+func (e *defaultExecutor) Run(ctx context.Context, w io.Writer, cmd string, args ...string) error {
+	c := exec.CommandContext(ctx, cmd, args...)
 
 	c.Stdout = w
 	c.Stderr = w
@@ -39,8 +39,8 @@ func (e *CmdExecutor) Run(w io.Writer, cmd string, args ...string) error {
 	return nil
 }
 
-func (e *CmdExecutor) Terminal(cmd string, args ...string) error {
-	c := exec.Command(cmd, args...)
+func (e *defaultExecutor) Terminal(ctx context.Context, cmd string, args ...string) error {
+	c := exec.CommandContext(ctx, cmd, args...)
 
 	c.Stdin = os.Stdin
 	c.Stdout = os.Stdout

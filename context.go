@@ -58,7 +58,7 @@ func (c *defaultContext) Execute(cmd string, args ...string) ([]byte, error) {
 		return nil, errors.Errorf("no executor")
 	}
 
-	data, err := c.engine.Executor.Execute(cmd, args...)
+	data, err := c.engine.Executor.Execute(c, cmd, args...)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
@@ -101,7 +101,7 @@ func (c *defaultContext) Run(cmd string, args ...string) error {
 		return errors.Errorf("no executor")
 	}
 
-	if err := c.engine.Executor.Run(c, cmd, args...); err != nil {
+	if err := c.engine.Executor.Run(c, c, cmd, args...); err != nil {
 		return errors.WithStack(err)
 	}
 
@@ -113,7 +113,7 @@ func (c *defaultContext) Terminal(cmd string, args ...string) error {
 		return errors.Errorf("no executor")
 	}
 
-	if err := c.engine.Executor.Terminal(cmd, args...); err != nil {
+	if err := c.engine.Executor.Terminal(c, cmd, args...); err != nil {
 		return errors.WithStack(err)
 	}
 

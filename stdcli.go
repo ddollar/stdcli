@@ -2,7 +2,7 @@ package stdcli
 
 func New(name, version string) *Engine {
 	e := &Engine{
-		Executor: &CmdExecutor{},
+		Executor: &defaultExecutor{},
 		Name:     name,
 		Reader:   DefaultReader,
 		Version:  version,
