@@ -16,6 +16,7 @@ type Context interface {
 
 	Arg(i int) string
 	Args() []string
+	Cleanup(func())
 	Execute(cmd string, args ...string) ([]byte, error)
 	Flags() Flags
 	InfoWriter() InfoWriter
@@ -47,6 +48,13 @@ func (c *defaultContext) Arg(i int) string {
 
 func (c *defaultContext) Args() []string {
 	return []string(c.args)
+}
+
+func (c *defaultContext) Cleanup(fn func()) {
+	go func() {
+		<-c.Done()
+		fn()
+	}()
 }
 
 func (c *defaultContext) Engine() *Engine {
