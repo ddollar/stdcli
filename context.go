@@ -23,7 +23,7 @@ type Context interface {
 	IsTerminal() bool
 	ReadSecret() (string, error)
 	Run(cmd string, args ...string) error
-	TableWriter(columns ...string) TableWriter
+	TableWriter(columns ...any) TableWriter
 	Terminal(cmd string, args ...string) error
 	Version() string
 	Writef(format string, args ...any)
@@ -141,6 +141,6 @@ func (c *defaultContext) Writef(format string, args ...any) {
 	c.engine.Writer.Write([]byte(fmt.Sprintf(format, args...))) //nolint:errcheck
 }
 
-func (c *defaultContext) TableWriter(columns ...string) TableWriter {
+func (c *defaultContext) TableWriter(columns ...any) TableWriter {
 	return &tableWriter{ctx: c, columns: columns}
 }
