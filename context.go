@@ -23,6 +23,7 @@ type Context interface {
 	IsTerminal() bool
 	ReadSecret() (string, error)
 	Run(cmd string, args ...string) error
+	TableWriter(columns ...string) TableWriter
 	Terminal(cmd string, args ...string) error
 	Version() string
 	Writef(format string, args ...any)
