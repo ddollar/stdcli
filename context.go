@@ -19,11 +19,11 @@ type Context interface {
 	Cleanup(func())
 	Execute(cmd string, args ...string) ([]byte, error)
 	Flags() Flags
-	InfoWriter() InfoWriter
+	Info() InfoWriter
 	IsTerminal() bool
 	ReadSecret() (string, error)
 	Run(cmd string, args ...string) error
-	TableWriter(columns ...any) TableWriter
+	Table(columns ...any) TableWriter
 	Terminal(cmd string, args ...string) error
 	Version() string
 	Writef(format string, args ...any)
@@ -79,7 +79,7 @@ func (c *defaultContext) Flags() Flags {
 	return c.flags
 }
 
-func (c *defaultContext) InfoWriter() InfoWriter {
+func (c *defaultContext) Info() InfoWriter {
 	return &infoWriter{ctx: c}
 }
 
@@ -117,6 +117,10 @@ func (c *defaultContext) Run(cmd string, args ...string) error {
 	return nil
 }
 
+func (c *defaultContext) Table(columns ...any) TableWriter {
+	return &tableWriter{ctx: c, columns: columns}
+}
+
 func (c *defaultContext) Terminal(cmd string, args ...string) error {
 	if c.engine.Executor == nil {
 		return errors.Errorf("no executor")
@@ -139,8 +143,4 @@ func (c *defaultContext) Write(data []byte) (int, error) {
 
 func (c *defaultContext) Writef(format string, args ...any) {
 	c.engine.Writer.Write([]byte(fmt.Sprintf(format, args...))) //nolint:errcheck
-}
-
-func (c *defaultContext) TableWriter(columns ...any) TableWriter {
-	return &tableWriter{ctx: c, columns: columns}
 }
