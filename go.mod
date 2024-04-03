@@ -3,14 +3,12 @@ module github.com/ddollar/stdcli
 go 1.22.1
 
 require (
+	github.com/ddollar/errors v0.0.2
 	github.com/golangci/golangci-lint v1.55.2
-	github.com/pkg/errors v0.9.1
 	github.com/spf13/pflag v1.0.5
 	github.com/stretchr/testify v1.8.4 // indirect
 	golang.org/x/term v0.16.0
 )
-
-require github.com/ddollar/errors v0.0.0-00010101000000-000000000000
 
 require (
 	4d63.com/gocheckcompilerdirectives v1.2.1 // indirect
@@ -193,5 +191,3 @@ require (
 	mvdan.cc/lint v0.0.0-20170908181259-adc824a0674b // indirect
 	mvdan.cc/unparam v0.0.0-20221223090309-7455f1af531d // indirect
 )
-
-replace github.com/ddollar/errors => ../errors
