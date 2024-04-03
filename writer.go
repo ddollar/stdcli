@@ -47,7 +47,7 @@ func (w *Writer) Error(err error) error {
 
 	if os.Getenv("DEBUG") == "true" {
 		if serr, ok := err.(errors.ErrorTracer); ok {
-			for _, f := serr.ErrorTrace() {
+			for _, f := range serr.ErrorTrace() {
 				fmt.Fprintf(w.Stderr, w.renderTags("<info>  %s:%d</info>\n"), f, f)
 			}
 		}
