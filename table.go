@@ -65,11 +65,11 @@ func (t *tableWriter) printJSON() error {
 
 	data, err := json.MarshalIndent(vs, "", "  ")
 	if err != nil {
-		return err
+		return err //nowrap
 	}
 
 	if _, err := t.ctx.Write(data); err != nil {
-		return err
+		return err //nowrap
 	}
 
 	return nil

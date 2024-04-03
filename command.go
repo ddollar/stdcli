@@ -66,12 +66,12 @@ func (c *Command) ExecuteContext(ctx context.Context, args []string) error {
 
 	if c.Validate != nil {
 		if err := c.Validate(cc); err != nil {
-			return err
+			return err //nowrap
 		}
 	}
 
 	if err := c.Handler(cc); err != nil {
-		return err
+		return err //nowrap
 	}
 
 	return nil

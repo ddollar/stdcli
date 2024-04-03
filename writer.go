@@ -54,7 +54,7 @@ func (w *Writer) Error(err error) error {
 		}
 	}
 
-	return err
+	return err //nowrap
 }
 
 func (w *Writer) Errorf(format string, args ...any) error {
