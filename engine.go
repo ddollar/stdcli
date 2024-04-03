@@ -7,7 +7,7 @@ import (
 	"os/signal"
 	"strings"
 
-	"github.com/pkg/errors"
+	"github.com/ddollar/errors"
 )
 
 type Engine struct {
@@ -70,7 +70,7 @@ func (e *Engine) ExecuteContext(ctx context.Context, args []string) int {
 	case ExitCoder:
 		return t.ExitCode()
 	default:
-		e.Writer.Errorf("%s", t) // nolint:errcheck
+		e.Writer.Error(err) //nolint:errcheck
 		return 1
 	}
 }

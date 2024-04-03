@@ -6,7 +6,7 @@ import (
 	"os"
 	"regexp"
 
-	"github.com/pkg/errors"
+	"github.com/ddollar/errors"
 )
 
 var (
@@ -44,6 +44,16 @@ func init() {
 
 func (w *Writer) Error(err error) error {
 	fmt.Fprintf(w.Stderr, w.renderTags("<error>%s</error>\n"), err)
+
+	if os.Getenv("DEBUG") == "true" {
+		if serr, ok := err.(errors.ErrorTracer); ok {
+			et := serr.ErrorTrace()
+			for _, f := range et[0 : len(et)-1] {
+				fmt.Fprintf(w.Stderr, w.renderTags("<info>  %s:%d</info>\n"), f, f)
+			}
+		}
+	}
+
 	return err
 }
 
@@ -66,7 +76,7 @@ func (w *Writer) Sprintf(format string, args ...any) string {
 func (w *Writer) Write(data []byte) (int, error) {
 	n, err := w.Stdout.Write([]byte(w.renderTags(string(data))))
 	if err != nil {
-		return 0, errors.WithStack(err)
+		return 0, errors.Wrap(err)
 	}
 
 	return n, nil
@@ -75,7 +85,7 @@ func (w *Writer) Write(data []byte) (int, error) {
 func (w *Writer) Writef(format string, args ...any) (int, error) {
 	n, err := fmt.Fprintf(w.Stdout, w.renderTags(format), args...)
 	if err != nil {
-		return 0, errors.WithStack(err)
+		return 0, errors.Wrap(err)
 	}
 
 	return n, nil

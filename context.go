@@ -6,7 +6,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/pkg/errors"
+	"github.com/ddollar/errors"
 	"golang.org/x/term"
 )
 
@@ -69,7 +69,7 @@ func (c *defaultContext) Execute(cmd string, args ...string) ([]byte, error) {
 
 	data, err := c.engine.Executor.Execute(c, cmd, args...)
 	if err != nil {
-		return nil, errors.WithStack(err)
+		return nil, errors.Wrap(err)
 	}
 
 	return data, nil
@@ -90,7 +90,7 @@ func (c *defaultContext) IsTerminal() bool {
 func (c *defaultContext) Read(data []byte) (int, error) {
 	n, err := c.engine.Reader.Read(data)
 	if err != nil {
-		return 0, errors.WithStack(err)
+		return 0, errors.Wrap(err)
 	}
 
 	return n, nil
@@ -99,7 +99,7 @@ func (c *defaultContext) Read(data []byte) (int, error) {
 func (c *defaultContext) ReadSecret() (string, error) {
 	data, err := term.ReadPassword(int(os.Stdin.Fd()))
 	if err != nil {
-		return "", errors.WithStack(err)
+		return "", errors.Wrap(err)
 	}
 
 	return string(data), nil
@@ -111,7 +111,7 @@ func (c *defaultContext) Run(cmd string, args ...string) error {
 	}
 
 	if err := c.engine.Executor.Run(c, c, cmd, args...); err != nil {
-		return errors.WithStack(err)
+		return errors.Wrap(err)
 	}
 
 	return nil
@@ -127,7 +127,7 @@ func (c *defaultContext) Terminal(cmd string, args ...string) error {
 	}
 
 	if err := c.engine.Executor.Terminal(c, cmd, args...); err != nil {
-		return errors.WithStack(err)
+		return errors.Wrap(err)
 	}
 
 	return nil

@@ -3,7 +3,7 @@ package stdcli
 import (
 	"fmt"
 
-	"github.com/pkg/errors"
+	"github.com/ddollar/errors"
 )
 
 type Validator func(ctx Context) error

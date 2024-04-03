@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/pkg/errors"
+	"github.com/ddollar/errors"
 )
 
 type Flag struct {
@@ -65,13 +65,13 @@ func (f *Flag) Set(v string) error {
 	case "duration":
 		d, err := time.ParseDuration(v)
 		if err != nil {
-			return errors.WithStack(err)
+			return errors.Wrap(err)
 		}
 		f.Value = d
 	case "int":
 		i, err := strconv.Atoi(v)
 		if err != nil {
-			return errors.WithStack(err)
+			return errors.Wrap(err)
 		}
 		f.Value = i
 	case "string":

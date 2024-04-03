@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/pkg/errors"
+	"github.com/ddollar/errors"
 	"github.com/spf13/pflag"
 )
 
@@ -54,7 +54,7 @@ func (c *Command) ExecuteContext(ctx context.Context, args []string) error {
 		if err == pflag.ErrHelp {
 			return nil
 		}
-		return errors.WithStack(err)
+		return errors.Wrap(err)
 	}
 
 	cc := &defaultContext{
