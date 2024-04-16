@@ -21,6 +21,8 @@ type Context interface {
 	Flags() Flags
 	Info() InfoWriter
 	IsTerminal() bool
+	IsTerminalReader() bool
+	IsTerminalWriter() bool
 	ReadSecret() (string, error)
 	Run(cmd string, args ...string) error
 	Table(columns ...any) TableWriter
@@ -84,7 +86,15 @@ func (c *defaultContext) Info() InfoWriter {
 }
 
 func (c *defaultContext) IsTerminal() bool {
+	return c.engine.Reader.IsTerminal() && c.engine.Writer.IsTerminal()
+}
+
+func (c *defaultContext) IsTerminalReader() bool {
 	return c.engine.Reader.IsTerminal()
+}
+
+func (c *defaultContext) IsTerminalWriter() bool {
+	return c.engine.Writer.IsTerminal()
 }
 
 func (c *defaultContext) Read(data []byte) (int, error) {
