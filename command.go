@@ -41,7 +41,7 @@ func (c *Command) ExecuteContext(ctx context.Context, args []string) error {
 		g := f
 		flags = append(flags, &g)
 		flag := fs.VarPF(&g, f.Name, f.Short, f.Description)
-		if f.Type() == "bool" {
+		if f.Kind() == FlagBool {
 			flag.NoOptDefVal = "true"
 		}
 	}
