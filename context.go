@@ -26,6 +26,7 @@ type Context interface {
 	ReadSecret() (string, error)
 	Run(cmd string, args ...string) error
 	Table(columns ...any) TableWriter
+	Columns() ColumnWriter
 	Terminal(cmd string, args ...string) error
 	Version() string
 	Writef(format string, args ...any)
@@ -129,6 +130,10 @@ func (c *defaultContext) Run(cmd string, args ...string) error {
 
 func (c *defaultContext) Table(columns ...any) TableWriter {
 	return &tableWriter{ctx: c, columns: columns}
+}
+
+func (c *defaultContext) Columns() ColumnWriter {
+	return &columnWriter{ctx: c}
 }
 
 func (c *defaultContext) Terminal(cmd string, args ...string) error {

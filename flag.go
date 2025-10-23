@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ddollar/ddl"
 	"github.com/ddollar/errors"
 )
 
@@ -104,27 +105,18 @@ func (f *Flag) Kind() FlagType {
 	return f.kind
 }
 
-func (f *Flag) Usage(v string) string {
+func (f *Flag) Usage() string {
+	command := ddl.If(f.Short != "", fmt.Sprintf("-%s", f.Short), "  ")
+	command += fmt.Sprintf(" --%s", f.Name)
+
 	switch f.Kind() {
 	case FlagBool:
-		return fmt.Sprintf("%s <u><info></info></u>", v)
+		return command
 	case FlagDuration, FlagInt, FlagString:
-		return fmt.Sprintf("%s <u><info>%s</info></u>", v, f.Name)
+		return fmt.Sprintf("%s <u><info><%s></info></u>", command, f.Name)
 	default:
 		panic(fmt.Sprintf("unknown flag type: %s", f.Type()))
 	}
-}
-
-func (f *Flag) UsageLong() string {
-	return f.Usage(fmt.Sprintf("--%s", f.Name))
-}
-
-func (f *Flag) UsageShort() string {
-	if f.Short == "" {
-		return ""
-	}
-
-	return f.Usage(fmt.Sprintf("-%s", f.Short))
 }
 
 func (fs Flags) Bool(name string) bool {

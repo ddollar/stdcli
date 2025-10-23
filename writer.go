@@ -5,6 +5,7 @@ import (
 	"io"
 	"os"
 	"regexp"
+	"strings"
 
 	"github.com/ddollar/errors"
 )
@@ -125,6 +126,7 @@ func renderError(s string) string {
 var (
 	colorStripper = regexp.MustCompile("\033\\[[^m]+m")
 	tagStripper   = regexp.MustCompile(`^<[^>?]+>(.*)</[^>?]+>$`)
+	tagMatcher    = regexp.MustCompile(`<([^>?]+)>`)
 )
 
 func stripColor(s string) string {
@@ -141,4 +143,32 @@ func stripTag(v any) string {
 	}
 
 	return match[1]
+}
+
+func stripTags(v any) string {
+	s := fmt.Sprintf("%v", v)
+
+	for {
+		m := tagMatcher.FindStringSubmatchIndex(s)
+
+		if len(m) != 4 {
+			break
+		}
+
+		os := m[0]
+		oe := m[1]
+
+		closer := fmt.Sprintf("</%s>", s[m[2]:m[3]])
+		cs := strings.Index(s, closer)
+
+		if cs == -1 {
+			break
+		}
+
+		ce := cs + len(closer)
+
+		s = s[:os] + s[oe:cs] + s[ce:]
+	}
+
+	return s
 }

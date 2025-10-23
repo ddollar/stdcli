@@ -37,32 +37,23 @@ func help(e *Engine) HandlerFunc {
 	}
 }
 
-func helpCommand(e *Engine, cmd *Command) {
+func helpCommand(ctx Context, e *Engine, cmd *Command) {
 	e.Writer.Writef("<h2>USAGE</h2>\n  <value>%s</value> <info>%s</info>\n\n", cmd.FullCommand(), cmd.Usage) //nolint:errcheck
 	e.Writer.Writef("<h2>DESCRIPTION</h2>\n  <value>%s</value>\n\n", cmd.Description)                        //nolint:errcheck
 	e.Writer.Writef("<h2>OPTIONS</h2>\n")                                                                    //nolint:errcheck
 
-	ll := 0
-	ls := 0
-
 	fs := []Flag(cmd.Flags)
 
-	sort.Slice(fs, func(i, j int) bool { return fs[i].Name < fs[j].Name })
+	cw := ctx.Columns()
 
 	for _, f := range fs {
-		l := f.UsageLong()
-		s := f.UsageShort()
-
-		if len(l) > ll {
-			ll = len(l)
-		}
-
-		if len(s) > ls {
-			ls = len(s)
-		}
+		cw.Append("", f.Usage(), f.Description)
 	}
 
-	for _, f := range fs {
-		e.Writer.Writef(fmt.Sprintf(fmt.Sprintf("  %%-%ds  %%-%ds\n", ll, ls), f.UsageLong(), f.UsageShort())) //nolint:errcheck
-	}
+	cw.Print()
+
+	// for _, f := range fs {
+	// 	// e.Writer.Writef(fmt.Sprintf(fmt.Sprintf("  %%-%ds  %%s\n", maxusage), f.Usage(), f.Description)) //nolint:errcheck
+	// 	e.Writer.WriteColumns(f.Usage(), f.Description)
+	// }
 }

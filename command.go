@@ -33,7 +33,6 @@ type HandlerFunc func(Context) error
 
 func (c *Command) ExecuteContext(ctx context.Context, args []string) error {
 	fs := pflag.NewFlagSet("", pflag.ContinueOnError)
-	fs.Usage = func() { helpCommand(c.engine, c) }
 
 	flags := []*Flag{}
 
@@ -46,6 +45,15 @@ func (c *Command) ExecuteContext(ctx context.Context, args []string) error {
 		}
 	}
 
+	cc := &defaultContext{
+		Context: ctx,
+		args:    fs.Args(),
+		flags:   flags,
+		engine:  c.engine,
+	}
+
+	fs.Usage = func() { helpCommand(cc, c.engine, c) }
+
 	if err := fs.Parse(args); err != nil {
 		if strings.HasPrefix(err.Error(), "unknown shorthand flag") {
 			parts := strings.Split(err.Error(), " ")
@@ -55,13 +63,6 @@ func (c *Command) ExecuteContext(ctx context.Context, args []string) error {
 			return nil
 		}
 		return errors.Wrap(err)
-	}
-
-	cc := &defaultContext{
-		Context: ctx,
-		args:    fs.Args(),
-		flags:   flags,
-		engine:  c.engine,
 	}
 
 	if c.Validate != nil {
