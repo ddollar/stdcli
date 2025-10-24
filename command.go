@@ -51,15 +51,6 @@ func (c *Command) ExecuteContext(ctx context.Context, args []string) error {
 	registerFlags(fs, &flags, c.engine.Flags)
 	registerFlags(fs, &flags, c.Flags)
 
-	cc := &defaultContext{
-		Context: ctx,
-		args:    fs.Args(),
-		flags:   flags,
-		engine:  c.engine,
-	}
-
-	fs.Usage = func() { helpCommand(cc, c.engine, c) }
-
 	if err := fs.Parse(args); err != nil {
 		if strings.HasPrefix(err.Error(), "unknown shorthand flag") {
 			parts := strings.Split(err.Error(), " ")
@@ -70,6 +61,15 @@ func (c *Command) ExecuteContext(ctx context.Context, args []string) error {
 		}
 		return errors.Wrap(err)
 	}
+
+	cc := &defaultContext{
+		Context: ctx,
+		args:    fs.Args(),
+		flags:   flags,
+		engine:  c.engine,
+	}
+
+	fs.Usage = func() { helpCommand(cc, c.engine, c) }
 
 	if c.Validate != nil {
 		if err := c.Validate(cc); err != nil {
