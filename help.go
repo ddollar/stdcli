@@ -5,6 +5,29 @@ import (
 	"sort"
 )
 
+func writeFlags(ctx Context, e *Engine, title string, flags []Flag) {
+	if len(flags) == 0 {
+		return
+	}
+
+	e.Writer.Writef("<h2>%s</h2>\n", title) //nolint:errcheck
+
+	// Sort flags alphabetically by name
+	sorted := make([]Flag, len(flags))
+	copy(sorted, flags)
+	sort.Slice(sorted, func(i, j int) bool { return sorted[i].Name < sorted[j].Name })
+
+	cw := ctx.Columns()
+
+	for _, f := range sorted {
+		cw.Append("", f.Usage(), f.Description)
+	}
+
+	cw.Print()
+
+	e.Writer.Writef("\n") //nolint:errcheck
+}
+
 func help(e *Engine) HandlerFunc {
 	return func(ctx Context) error {
 		cs := []Command{}
@@ -40,20 +63,7 @@ func help(e *Engine) HandlerFunc {
 func helpCommand(ctx Context, e *Engine, cmd *Command) {
 	e.Writer.Writef("<h2>USAGE</h2>\n  <value>%s</value> <info>%s</info>\n\n", cmd.FullCommand(), cmd.Usage) //nolint:errcheck
 	e.Writer.Writef("<h2>DESCRIPTION</h2>\n  <value>%s</value>\n\n", cmd.Description)                        //nolint:errcheck
-	e.Writer.Writef("<h2>OPTIONS</h2>\n")                                                                    //nolint:errcheck
 
-	fs := []Flag(cmd.Flags)
-
-	cw := ctx.Columns()
-
-	for _, f := range fs {
-		cw.Append("", f.Usage(), f.Description)
-	}
-
-	cw.Print()
-
-	// for _, f := range fs {
-	// 	// e.Writer.Writef(fmt.Sprintf(fmt.Sprintf("  %%-%ds  %%s\n", maxusage), f.Usage(), f.Description)) //nolint:errcheck
-	// 	e.Writer.WriteColumns(f.Usage(), f.Description)
-	// }
+	writeFlags(ctx, e, "OPTIONS", cmd.Flags)
+	writeFlags(ctx, e, "GLOBAL OPTIONS", e.Flags)
 }

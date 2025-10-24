@@ -31,19 +31,25 @@ type CommandOptions struct {
 
 type HandlerFunc func(Context) error
 
-func (c *Command) ExecuteContext(ctx context.Context, args []string) error {
-	fs := pflag.NewFlagSet("", pflag.ContinueOnError)
-
-	flags := []*Flag{}
-
-	for _, f := range c.Flags {
+func registerFlags(fs *pflag.FlagSet, flags *[]*Flag, flagDefs []Flag) {
+	for _, f := range flagDefs {
 		g := f
-		flags = append(flags, &g)
+		*flags = append(*flags, &g)
 		flag := fs.VarPF(&g, f.Name, f.Short, f.Description)
 		if f.Kind() == FlagBool {
 			flag.NoOptDefVal = "true"
 		}
 	}
+}
+
+func (c *Command) ExecuteContext(ctx context.Context, args []string) error {
+	fs := pflag.NewFlagSet("", pflag.ContinueOnError)
+
+	flags := []*Flag{}
+
+	// Add global flags first, then command-specific flags
+	registerFlags(fs, &flags, c.engine.Flags)
+	registerFlags(fs, &flags, c.Flags)
 
 	cc := &defaultContext{
 		Context: ctx,

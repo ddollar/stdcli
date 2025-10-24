@@ -13,6 +13,7 @@ import (
 type Engine struct {
 	Commands []Command
 	Executor Executor
+	Flags    []Flag
 	Name     string
 	Reader   *Reader
 	Settings string
