@@ -76,15 +76,21 @@ func (t *tableWriter) printJSON() error {
 }
 
 func (t *tableWriter) printText() error {
-	f := t.formatString()
+	cw := t.ctx.Columns()
 
-	t.ctx.Writef(fmt.Sprintf("<h1>%s</h1>\n", f), t.columns...) //nolint:errcheck
+	cs := make([]any, len(t.columns))
 
-	for _, r := range t.rows {
-		t.ctx.Writef(fmt.Sprintf("<value>%s</value>\n", f), r...) //nolint:errcheck
+	for i, c := range t.columns {
+		cs[i] = fmt.Sprintf("<h1>%s</h1>", c)
 	}
 
-	return nil
+	cw.Append(cs...)
+
+	for _, r := range t.rows {
+		cw.Append(r...)
+	}
+
+	return cw.Print()
 }
 
 func (t *tableWriter) widths() []int {
