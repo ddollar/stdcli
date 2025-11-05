@@ -224,8 +224,8 @@ func TestContextInfo(t *testing.T) {
 	}
 
 	output := buf.String()
-	if !strings.Contains(output, "Key") || !strings.Contains(output, "Value") {
-		t.Errorf("InfoWriter output should contain Key and Value, got: %q", output)
+	if !strings.Contains(output, "KEY") || !strings.Contains(output, "Value") {
+		t.Errorf("InfoWriter output should contain KEY and Value, got: %q", output)
 	}
 }
 

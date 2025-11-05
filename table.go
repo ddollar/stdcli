@@ -32,18 +32,6 @@ func (t *tableWriter) Print() error {
 	}
 }
 
-func (t *tableWriter) formatString() string {
-	f := []string{}
-
-	ws := t.widths()
-
-	for _, w := range ws {
-		f = append(f, fmt.Sprintf("%%-%ds", w))
-	}
-
-	return strings.Join(f, "  ")
-}
-
 func (t *tableWriter) printJSON() error {
 	lccs := []string{}
 

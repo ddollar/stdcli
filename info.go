@@ -1,12 +1,13 @@
 package stdcli
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 )
 
 type InfoWriter interface {
-	Add(header, value string)
+	Add(header string, value any)
 	Print() error
 }
 
@@ -20,16 +21,44 @@ type infoRow struct {
 	value  string
 }
 
-func (i *infoWriter) Add(header, value string) {
-	i.rows = append(i.rows, infoRow{header: header, value: value})
+func (i *infoWriter) Add(header string, value any) {
+	i.rows = append(i.rows, infoRow{header: header, value: fmt.Sprintf("%v", value)})
 }
 
 func (i *infoWriter) Print() error {
+	switch i.ctx.Flags().String("output") {
+	case "json":
+		return i.printJSON()
+	default:
+		return i.printText()
+	}
+}
+
+func (i *infoWriter) printJSON() error {
+	v := map[string]any{}
+
+	for _, r := range i.rows {
+		v[strings.ToLower(r.header)] = r.value
+	}
+
+	data, err := json.MarshalIndent(v, "", "  ")
+	if err != nil {
+		return err //nowrap
+	}
+
+	if _, err := i.ctx.Write(data); err != nil {
+		return err //nowrap
+	}
+
+	return nil
+}
+
+func (i *infoWriter) printText() error {
 	f := i.formatString()
 
 	for _, r := range i.rows {
-		value := strings.Replace(r.value, "\n", fmt.Sprintf(fmt.Sprintf("\n%%%ds  ", i.headerWidth()), ""), -1)
-		i.ctx.Writef(f, r.header, value) //nolint:errcheck
+		value := strings.Replace(r.value, "\n", fmt.Sprintf("\n%*s  ", i.headerWidth(), ""), -1)
+		i.ctx.Writef(f, strings.ToUpper(r.header), value) //nolint:errcheck
 	}
 
 	return nil

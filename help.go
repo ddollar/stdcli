@@ -1,7 +1,6 @@
 package stdcli
 
 import (
-	"fmt"
 	"sort"
 )
 
@@ -53,7 +52,7 @@ func help(e *Engine) HandlerFunc {
 		}
 
 		for _, cmd := range cs {
-			e.Writer.Writef(fmt.Sprintf(fmt.Sprintf("<h1>%%-%ds</h1>  <value>%%s</value>\n", l), cmd.FullCommand(), cmd.Description)) // nolint:errcheck
+			e.Writer.Writef("<h1>%-*s</h1>  <value>%s</value>\n", l, cmd.FullCommand(), cmd.Description) // nolint:errcheck
 		}
 
 		return nil
