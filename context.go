@@ -6,7 +6,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/ddollar/errors"
+	"go.ddollar.dev/errors"
 	"golang.org/x/term"
 )
 

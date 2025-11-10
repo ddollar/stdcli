@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ddollar/errors"
+	"go.ddollar.dev/errors"
 )
 
 func TestWriterWrite(t *testing.T) {

@@ -7,7 +7,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/ddollar/errors"
+	"go.ddollar.dev/errors"
 )
 
 var (

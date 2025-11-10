@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/ddollar/errors"
+	"go.ddollar.dev/errors"
 	"github.com/spf13/pflag"
 )
 

@@ -7,7 +7,7 @@ import (
 	"os/signal"
 	"strings"
 
-	"github.com/ddollar/errors"
+	"go.ddollar.dev/errors"
 )
 
 type Engine struct {

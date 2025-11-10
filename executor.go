@@ -6,7 +6,7 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/ddollar/errors"
+	"go.ddollar.dev/errors"
 )
 
 type Executor interface {

@@ -1,14 +1,16 @@
-module github.com/ddollar/stdcli
+module go.ddollar.dev/stdcli
 
 go 1.22.5
 
 require (
-	github.com/ddollar/errors v0.0.2
 	github.com/golangci/golangci-lint v1.55.2
 	github.com/spf13/pflag v1.0.5
 	github.com/stretchr/testify v1.9.0 // indirect
+	go.ddollar.dev/errors v0.0.2
 	golang.org/x/term v0.16.0
 )
+
+require go.ddollar.dev/ddl v1.2.0
 
 require (
 	4d63.com/gocheckcompilerdirectives v1.2.1 // indirect
@@ -45,7 +47,6 @@ require (
 	github.com/curioswitch/go-reassign v0.2.0 // indirect
 	github.com/daixiang0/gci v0.11.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/ddollar/ddl v1.2.0 // indirect
 	github.com/denis-tingaikin/go-header v0.4.3 // indirect
 	github.com/esimonov/ifshort v1.0.4 // indirect
 	github.com/ettle/strcase v0.1.1 // indirect

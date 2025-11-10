@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ddollar/ddl"
-	"github.com/ddollar/errors"
+	"go.ddollar.dev/ddl"
+	"go.ddollar.dev/errors"
 )
 
 type FlagType string
